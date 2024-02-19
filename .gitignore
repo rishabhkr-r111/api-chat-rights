@@ -1,0 +1,19 @@
+# Ignore venv directory
+venv/
+.venv/
+
+# Ignore pipenv virtual environment
+.pipenv/
+
+# Ignore poetry virtual environment
+.pyenv/
+
+# Ignore pipenv lock file
+Pipfile.lock
+
+# Ignore poetry lock file
+poetry.lock
+
+# Ignore any other virtual environment directories or files
+# Ignore environment variables file
+.env
