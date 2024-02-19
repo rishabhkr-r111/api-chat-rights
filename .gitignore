@@ -1,7 +1,7 @@
 # Ignore venv directory
 venv/
 .venv/
-
+__pycache__/
 # Ignore pipenv virtual environment
 .pipenv/
 
