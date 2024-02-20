@@ -3,6 +3,8 @@ import json
 from bs4 import BeautifulSoup
 from urllib.parse import unquote
 from fastapi import APIRouter
+from datetime import datetime, timedelta
+
 
 router = APIRouter()
 
@@ -26,8 +28,11 @@ async def search(query: str):
     return titles_and_hrefs
 
 @router.get("/advsearch/")
-async def advsearch(query: str, fromdate: str, todate: str):
+async def advsearch(query: str, fromdate: str):
     query = unquote(query)
+    date = datetime.strptime(fromdate, '%d-%m-%Y')
+    date_plus_one_year = date + timedelta(days=365)
+    todate = date_plus_one_year.strftime('%d-%m-%Y')
     url = f'https://indiankanoon.org/search/?formInput=doctypes:{query} fromdate:{fromdate} todate:{todate}'
     html_content = requests.get(url).text
     soup = BeautifulSoup(html_content, 'html.parser')
