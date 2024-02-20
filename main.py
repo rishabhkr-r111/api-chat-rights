@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import unquote
 
 from src.search import router as search_router
+from src.years import router as years_router
 
 load_dotenv()
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
@@ -18,6 +19,7 @@ model = genai.GenerativeModel('gemini-pro')
 
 app = FastAPI()
 app.include_router(search_router)
+app.include_router(years_router)
 
 chats: Dict[str, genai.GenerativeModel] = {}
 
@@ -40,19 +42,6 @@ async def websocket_endpoint(websocket: WebSocket):
 @app.get("/")
 async def read_root():
     return {"message": "API Chat-Rights"}
-
-@app.get("/years/{law}")
-async def get_years(law: str):
-    query = unquote(law)
-    url = f'https://indiankanoon.org/browse/{law}'
-    html_content = requests.get(url).text
-    soup = BeautifulSoup(html_content, 'html.parser')
-    years = []
-    year_links = soup.select('.browselist a')
-    for result_title in year_links:
-        year = result_title.get_text()
-        years.append(year)
-    return years
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
